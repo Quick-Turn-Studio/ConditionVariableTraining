@@ -2,6 +2,9 @@
 
 #include <deque>
 #include <stdexcept>
+#include <condition_variable>
+#include <mutex>
+
 
 namespace containers
 {
@@ -26,6 +29,8 @@ public:
 
 private:
     Container container;
+    mutable std::mutex m;
+    std::condition_variable cv;
 };
 
 template<typename ValueType, typename Container>
@@ -37,9 +42,8 @@ Stack<ValueType, Container>::Stack(std::initializer_list<ValueType> values)
 template<typename ValueType, typename Container>
 ValueType Stack<ValueType, Container>::pop()
 {
-    if (container.empty()) {
-        throw std::out_of_range("Stack is empty");
-    }
+    std::unique_lock lock(m);
+    cv.wait(lock, [&] { return !container.empty(); });
     const auto value = container.back();
     container.pop_back();
     return value;
@@ -48,7 +52,10 @@ ValueType Stack<ValueType, Container>::pop()
 template<typename ValueType, typename Container>
 void Stack<ValueType, Container>::push(const ValueType& value)
 {
+    std::unique_lock lock(m);
     container.push_back(value);
+    lock.unlock();
+    cv.notify_all();
 }
 
 template<typename ValueType, typename Container>
