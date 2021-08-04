@@ -28,8 +28,8 @@ void consumerJob(Consumer& consumer, TestedStack& stack)
 TEST(StackTest, ConsumerConsumesSameNumberOfElementsAsProducerProduces)
 {
     // given:
-//    constexpr auto elementToProduce = 10'000;
-    constexpr auto elementToProduce = 10;
+    constexpr auto elementToProduce = 10'000;
+//    constexpr auto elementToProduce = 10;
     Stack<int> stack;
     auto producer = Producer(elementToProduce);
     auto consumer = Consumer(elementToProduce);

@@ -28,6 +28,9 @@ public:
     int size() const;
 
 private:
+    int internalSize() const;
+
+private:
     Container container;
     mutable std::mutex m;
     std::condition_variable cv;
@@ -61,13 +64,25 @@ void Stack<ValueType, Container>::push(const ValueType& value)
 template<typename ValueType, typename Container>
 int Stack<ValueType, Container>::size() const
 {
-    return static_cast<int>(container.size());
+    std::scoped_lock lock(m);
+    // std::lock_guard lock(m); // in case of not supporting C++17
+
+    // we use internalSize() instead of size() to avoid deadlock
+    return internalSize();
 }
 
 template<typename ValueType, typename Container>
 bool Stack<ValueType, Container>::isEmpty() const
 {
-    return size() == 0;
+    std::scoped_lock lock(m);
+    // std::lock_guard lock(m); // in case of not supporting C++17
+    return internalSize() == 0;
+}
+
+template<typename ValueType, typename Container>
+int Stack<ValueType, Container>::internalSize() const
+{
+    return static_cast<int>(container.size());
 }
 
 } // namespace containers
