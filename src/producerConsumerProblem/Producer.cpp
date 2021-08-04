@@ -1,7 +1,7 @@
 #include "Producer.h"
 
 Producer::Producer(int elementToProduce)
-  : elementsToProduce(elementsToProduce)
+  : elementsToProduce(elementToProduce)
 {
 }
 
