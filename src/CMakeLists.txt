@@ -1,0 +1,3 @@
+add_subdirectory(stack)
+add_subdirectory(bankingExample)
+add_subdirectory(producerConsumerProblem)

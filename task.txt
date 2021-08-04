@@ -1,0 +1,5 @@
+- Implement thread safe stack
+- Popping element on empty stack results in locking current thread and resumes when new element is pushed in another thread
+- Stack class is placed in src/stack/Stack.h
+- Producer-consumer simulation on stack is implemented in src/producerConsumerProblem/
+- To run simulation execute target MultiThreadStackTests
